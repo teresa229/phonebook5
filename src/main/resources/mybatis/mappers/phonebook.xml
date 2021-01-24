@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="phonebook">
+
+	<!-- PersonVo Map -->
+	<resultMap id="resultMapPersonVo" type="com.javaex.vo.PersonVo">
+		<result column="person_id" property="personId" />
+		<result column="name" property="name" />
+		<result column="hp" property="hp" />
+		<result column="company" property="company" />
+	</resultMap>
+
+	<select id="selectList" resultType="com.javaex.vo.PersonVo"> <!-- 여기서 정한 이름을 dao에 넣어준다. <,>가 중요한 역할을 한다. -->
+		<![CDATA[
+		select  person_id as personId, 
+				name,     
+				hp,       
+				company   
+		from person       
+		order by person_id desc
+		]]>
+	</select>
+
+	<!-- 전체리스트 가져오기 resultMap -->
+	<!-- resultMap 중에 저 이름(id)으로 된 것을 찾는다. -->
+	<select id="selectList2" resultMap="resultMapPersonVo">   <!-- resultMap -->
+	    <![CDATA[
+	        select  person_id,
+	                 name, 
+	                 hp,
+	                 company
+	        from person
+	        order by person_id desc
+	    ]]>
+	</select>
+
+	<!-- 전화번호 저장 -->                 <!-- parameterType 결과를 가져온다 -->  <!-- name은 getName으로 인지한다. -->
+	<insert id="insert" parameterType="com.javaex.vo.PersonVo">
+		<![CDATA[
+			insert into person
+			values (seq_person_id.nextval,
+			        #{name},
+			        #{hp},
+			        #{company})
+		]]>
+	</insert>
+
+	<!-- 전화번호 삭제 -->                 <!-- 자료형 넣어주는 자리 -->
+	<delete id="delete" parameterType="int">
+	     delete from person 
+		 where person_id =#{personId} 
+	</delete>
+	
+	<!-- 전화번호 1개 가져오기 -->
+	<select id="selectOne" parameterType="int" resultType="com.javaex.vo.PersonVo"> <!-- resultmap이나 resultType을 선택 -->
+		<![CDATA[
+			select  person_id personId,
+	                name, 
+	                hp,
+	                company
+	        from person
+	        where person_id = #{personId}
+		]]>
+	</select>
+	
+	<!-- 전화번호 수정 -->
+	<update id="update" parameterType="com.javaex.vo.PersonVo">
+		<![CDATA[
+			 update person
+			 set name = #{name},
+				 hp = #{hp},
+				 company = #{company}
+			 where person_id = #{personId}
+		]]>
+	
+	</update>
+	
+
+</mapper>
