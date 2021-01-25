@@ -3,6 +3,7 @@
 
 <configuration>
     <typeAliases>
+    	<!-- <typeAlias alias="PersonVo" type="com.javaex.vo.PersonVo" /> -->   <!-- 내가 추가한 부분 : 파워포인트 따옴표 주의-->
     </typeAliases>
 
     <mappers>

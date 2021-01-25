@@ -1,6 +1,7 @@
 package com.javaex.controller;
 
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -93,16 +94,25 @@ public class PhoneController {
 		System.out.println("modifyForm");
 		System.out.println(id);
 		
-		//VO에 담아주어 보내기
 		PersonVo personVo = phoneDao.getPerson(id);
-		
-		//DB에서 잘 받아왔는지 확인!
-		System.out.println(personVo.toString());
-		
-		//model에 담아주기
-		model.addAttribute("pvo", personVo);  //(별명, 실제 데이터 주소) -> 알아서 request Attribute에 넣어준다 ->forward가 이루어진다.
+	
+		System.out.println(personVo.toString());   //DB에서 잘 받아왔는지 확인!
+
+		model.addAttribute("pvo", personVo);       //(별명, 실제 데이터 주소) -> 알아서 request Attribute에 넣어준다 ->forward가 이루어진다.
 		
 		return "modifyForm"; 
+	}
+	
+	// modifyForm2
+	@RequestMapping(value="/modifyForm2", method= {RequestMethod.GET,RequestMethod.POST})
+	public String modifyForm2(@RequestParam("personId") int id, Model model) {  //Model model의 위치는 앞뒤 상관없다.
+		System.out.println("modifyForm2");
+		System.out.println(id);
+		
+		Map<String, Object> personMap = phoneDao.getPerson2(id); //map - import
+		model.addAttribute("pMap", personMap);  //(별명, 실제 데이터 주소) -> 알아서 request Attribute에 넣어준다 ->forward가 이루어진다.
+		
+		return "modifyForm2"; 
 	}
 	
 	// 수정 --> 문법 : @ModelAttribute
@@ -111,7 +121,6 @@ public class PhoneController {
 		//@ModelAttribute + 자료형 + 이름 담아준다-> 디폴트로 생성자가 있어야 함 -> set으로 데이터를 불러온다.
 		
 		System.out.println("수정"); 
-		
 		System.out.println(personVo.toString());
 		
 		phoneDao.personUpdate(personVo);  
@@ -119,25 +128,19 @@ public class PhoneController {
 		return "redirect:/phone/list";
 	}
 
-	
-	/* 
-	// 수정 --> @RequestParam
+	// 수정2 --> @RequestParam
 	@RequestMapping(value="/modify2", method= {RequestMethod.GET, RequestMethod.POST})
-	public String modify2(@RequestParam("personId") int id, @RequestParam("name") String name, @RequestParam("hp") String hp, @RequestParam("company") String company) {
+	public String modify2(@RequestParam("personId") int personId,
+			              @RequestParam("name") String name,
+			              @RequestParam("hp") String hp,
+			              @RequestParam("company") String company) {
 		System.out.println("수정2");
-		
-		PersonVo personVo = new PersonVo(id, name, hp, company);	 //내부에서 사용하는 id --> int id 
-		
-		System.out.println(personVo.toString());
-		
-		 modify
-		//PhoneDao phoneDao = new PhoneDao();
-		phoneDao.personUpdate(personVo);  //디비에 저장이 확실하게 되었는지 확인해주는 것이 좋다. --> sql로 확인
+		System.out.println(personId+ "," + name +","+ hp +","+ company);		
+
+		phoneDao.personUpdate2(personId, name, hp, company);  //디비에 저장이 확실하게 되었는지 확인해주는 것이 좋다. --> sql로 확인
 		
 		return "redirect:/phone/list";
 	}
 	
-	
 
-	*/
 }
